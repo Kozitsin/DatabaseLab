@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DatabaseLab.Logger;
+using DatabaseLab.Logging;
 using System.IO;
 
 namespace UnitTests
