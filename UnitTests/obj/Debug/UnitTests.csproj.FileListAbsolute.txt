@@ -1,0 +1,8 @@
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\bin\Debug\UnitTests.dll
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\bin\Debug\UnitTests.pdb
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\bin\Debug\DatabaseLab.exe
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\bin\Debug\DatabaseLab.pdb
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\obj\Debug\UnitTests.csprojResolveAssemblyReference.cache
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\obj\Debug\UnitTests.dll
+C:\Users\Александр\Documents\GitHub\DatabaseLab\UnitTests\obj\Debug\UnitTests.pdb
