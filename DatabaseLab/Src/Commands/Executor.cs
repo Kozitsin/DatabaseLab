@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseLab.Src.Commands
+namespace DatabaseLab.Commands
 {
     class Executor
     {

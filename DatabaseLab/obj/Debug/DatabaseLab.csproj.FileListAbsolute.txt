@@ -1,1 +1,12 @@
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.exe.config
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.exe
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.pdb
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\Forms\MainWindow.baml
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\Forms\MainWindow.g.cs
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\Forms\App.g.cs
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab_MarkupCompile.cache
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.g.resources
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.Properties.Resources.resources
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.csproj.GenerateResource.Cache
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.exe
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.pdb
