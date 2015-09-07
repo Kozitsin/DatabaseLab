@@ -70,6 +70,7 @@
     </ApplicationDefinition>
     <Compile Include="Src\Commands\Executor.cs" />
     <Compile Include="Src\Commands\Parser.cs" />
+    <Compile Include="Src\Database\FileWrapper.cs" />
     <Compile Include="Src\Database\Record.cs" />
     <Compile Include="Src\Database\Types.cs" />
     <Compile Include="Src\Logger\Logger.cs" />
