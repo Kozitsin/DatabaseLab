@@ -11,16 +11,16 @@ namespace UnitTests
         [TestMethod]
         public void RecordCreationWithAllTypes()
         {
-            List<Types> types = new List<Types>() { Types.BOOLEAN, Types.DOUBLE, Types.FLOAT, Types.INTEGER, Types.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
 
-            Assert.AreEqual(5 ,record.data.Count);
+            Assert.AreEqual(3 ,record.data.Count);
         }
 
         [TestMethod]
         public void RecordCreationWithNoTypes()
         {
-            List<Types> types = new List<Types>();
+            List<Types.Type> types = new List<Types.Type>();
             Record record = new Record(types);
 
             Assert.AreEqual(0, record.data.Count);
@@ -29,30 +29,30 @@ namespace UnitTests
         [TestMethod]
         public void RecordCreationWithSeveralEqualTypes()
         {
-            List<Types> types = new List<Types>() { Types.BOOLEAN, Types.DOUBLE, Types.FLOAT, Types.INTEGER, Types.VARCHAR, Types.BOOLEAN };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR, Types.Type.BOOLEAN };
             Record record = new Record(types);
 
-            Assert.AreEqual(6, record.data.Count);
+            Assert.AreEqual(4, record.data.Count);
         }
 
         [TestMethod]
         public void RecordEditOneField()
         {
-            List<Types> types = new List<Types>() { Types.DOUBLE, Types.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
 
-            record.Edit(3.4, 0);
+            record.Edit(3, 0);
 
-            Assert.AreEqual(3.4, record.data[0]);
+            Assert.AreEqual(3, record.data[0]);
         }
 
         [TestMethod]
         public void RecordEditOutOfRange()
         {
-            List<Types> types = new List<Types>() { Types.DOUBLE, Types.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
 
-            bool res = record.Edit(0.1, 2);
+            bool res = record.Edit(1, 2);
 
             Assert.AreEqual(false, res);
         }
@@ -60,10 +60,10 @@ namespace UnitTests
         [TestMethod]
         public void RecordEditIntAsDoubleFail()
         {
-            List<Types> types = new List<Types>() { Types.DOUBLE, Types.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
 
-            bool res = record.Edit(1, 0);
+            bool res = record.Edit(1.23, 0);
 
             Assert.AreNotEqual(true, res);
         }
@@ -71,10 +71,10 @@ namespace UnitTests
         [TestMethod]
         public void RecordEditIntAsDoubleWithCast()
         {
-            List<Types> types = new List<Types>() { Types.DOUBLE, Types.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>() { Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
 
-            bool res = record.Edit((double)1, 0);
+            bool res = record.Edit((int)1.23, 0);
 
             Assert.AreEqual(true, res);
         }

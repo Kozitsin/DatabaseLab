@@ -8,6 +8,12 @@ namespace UnitTests
     [TestClass]
     public class LoggerUnitTests
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Logger.pathToWrite = "./TestLog.dat";
+        }
+
         [TestMethod]
         public void LoggerCreation()
         {
@@ -69,6 +75,7 @@ namespace UnitTests
             try
             {
                 File.Delete("./TestLog.dat");
+                Logger.pathToWrite = "Logs.dat";
             }
             catch (Exception)
             {

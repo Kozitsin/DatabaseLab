@@ -14,26 +14,20 @@ namespace DatabaseLab.Database
 
         #region Constructor
         
-        public Record(List<Types> types)
+        public Record(List<Types.Type> types)
         {
             for (int i = 0; i < types.Count; i++)
             {
                 switch (types[i])
                 {
-                    case Types.VARCHAR:
+                    case Types.Type.VARCHAR:
                         data.Add(default(string));
                         break;
-                    case Types.BOOLEAN:
+                    case Types.Type.BOOLEAN:
                         data.Add(default(bool));
                         break;
-                    case Types.INTEGER:
+                    case Types.Type.INTEGER:
                         data.Add(default(int));
-                        break;
-                    case Types.FLOAT:
-                        data.Add(default(float));
-                        break;
-                    case Types.DOUBLE:
-                        data.Add(default(double));
                         break;
                 }
             }

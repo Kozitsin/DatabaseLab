@@ -8,6 +8,5 @@ C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\D
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.exe.config
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.exe
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\bin\Debug\DatabaseLab.pdb
-C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.csprojResolveAssemblyReference.cache
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.exe
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.pdb

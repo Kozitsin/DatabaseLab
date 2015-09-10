@@ -29,7 +29,7 @@ namespace DatabaseLab.Database
             }
         }
 
-        public static bool CreateTable(string tableName, List<Types> types, List<string> headers)
+        public static bool CreateTable(string tableName, List<Type> types, List<string> headers)
         {
             string path = databasePath + '/' + tableName + ".dat";
             bool isSuccess = false;
@@ -53,17 +53,34 @@ namespace DatabaseLab.Database
 
         public static bool AddRecord(string tableName, Record record)
         {
-            string path = databasePath + '/' + tableName + ".dat";
-            bool isSuccess = false;
+            string pathTable = databasePath + '/' + tableName + ".dat";
+            string pathUtile = databasePath + '/' + tableName + "_info.dat";
 
             try
             {
-                if (File.Exists(path))
+                if (File.Exists(pathTable) && File.Exists(pathUtile))
                 {
-                    // TODO: count hash of record, form the template with whitespaces and put it to the file,
-                    // write down the position and hash to the utility file.
+                    long length = 0;
+                    using (FileStream fs = new FileStream(pathTable, FileMode.Open))
+                    using (BinaryWriter writer = new BinaryWriter(fs))
+                    {
+                        length = fs.Length;
+                        string converted = Types.RecordToStr(record);
 
-                    Logger.Write(String.Format("Record with hash {0} was successfully added in table {1}", hash ,tableName), Logger.Level.Info);
+                        writer.Write(StringToBytes(converted));
+                        Logger.Write(String.Format("Record was successfully added in table {0}", tableName), Logger.Level.Info);
+                    }
+
+                    using (FileStream fs = new FileStream(pathUtile, FileMode.Open))
+                    using (BinaryWriter writer = new BinaryWriter(fs))
+                    {
+                        writer.Write(StringToBytes(""))
+                    }
+
+                        // TODO: count hash of record, form the template with whitespaces and put it to the file,
+                        // write down the position and hash to the utility file.
+
+                        Logger.Write(String.Format("Record with hash {0} was successfully added in table {1}", 1, tableName), Logger.Level.Info);
                 }
             }
             catch (Exception ex)
@@ -91,7 +108,7 @@ namespace DatabaseLab.Database
             return new string(chars);
         }
 
-        private static bool CreateUtilityFile(string tableName, List<Types> types, List<string> headers)
+        private static bool CreateUtilityFile(string tableName, List<Type> types, List<string> headers)
         {
             string path = databasePath + '/' + tableName + "_info.dat";
 
@@ -117,7 +134,7 @@ namespace DatabaseLab.Database
             return true;
         }
 
-        private static string ConcatHeaders(List<Types> types, List<string> headers)
+        private static string ConcatHeaders(List<Type> types, List<string> headers)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < headers.Count; i++)
