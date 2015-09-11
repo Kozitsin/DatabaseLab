@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseLab.Commands
 {
-    class Executor
+    public class Executor
     {
     }
 }

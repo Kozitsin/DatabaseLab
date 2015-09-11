@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace DatabaseLab.Logger
+namespace DatabaseLab.Logging
 {
     public static class Logger
     {
-        #region Datamembers
+        #region Data Members
 
         private static ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
-        public static string PathToWrite { get; set; }
+        public static string pathToWrite = "Logs.dat";
         
         public enum Level
         {
@@ -59,7 +56,7 @@ namespace DatabaseLab.Logger
             locker.EnterWriteLock();
             try
             {
-                StreamWriter file = new StreamWriter(PathToWrite, true);
+                StreamWriter file = new StreamWriter(pathToWrite, true);
                 file.WriteLine(msg);
                 file.Close();
             }
