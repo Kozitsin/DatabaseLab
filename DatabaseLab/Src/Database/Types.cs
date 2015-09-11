@@ -1,5 +1,7 @@
 ﻿using DatabaseLab.Logging;
 using System.Text;
+using System;
+using System.Collections.Generic;
 
 namespace DatabaseLab.Database
 {
@@ -56,18 +58,34 @@ namespace DatabaseLab.Database
             }
         }
 
-        private static bool StrToBoolean(string s)
+        private static bool? StrToBoolean(string s)
         {
-
+            if (s == "1")
+                return true;
+            else if (s == "0")
+                return false;
+            else
+                return null;
         }
 
         private static string StrToVarchar(string s)
         {
-
+            s.TrimEnd(' ');
+            return s;
         }
 
-        private static int StrToInteger(string s)
+        private static int? StrToInteger(string s)
         {
+            try
+            {
+                s.TrimEnd(' ');
+                return Convert.ToInt32(s);
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
+                return null;
+            }
 
         }
 
@@ -83,15 +101,15 @@ namespace DatabaseLab.Database
 
                 for (int i = 0; i < record.data.Count; i++)
                 {
-                    if (record.data.GetType() == System.Type.GetType("bool"))
+                    if (record.data[i].GetType() == System.Type.GetType("System.Boolean"))
                     {
                         sb.Append(BooleanToStr((bool)record.data[i]));
                     }
-                    else if (record.data.GetType() == System.Type.GetType("string"))
+                    else if (record.data[i].GetType() == System.Type.GetType("System.String"))
                     {
                         sb.Append(VarcharToStr((string)record.data[i]));
                     }
-                    else if (record.data.GetType() == System.Type.GetType("int"))
+                    else if (record.data[i].GetType() == System.Type.GetType("System.Int32"))
                     {
                         sb.Append(IntegerToStr((int)record.data[i]));
                     }
@@ -99,7 +117,7 @@ namespace DatabaseLab.Database
 
                 return sb.ToString();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Logger.Write(ex);
                 return string.Empty;
@@ -107,9 +125,49 @@ namespace DatabaseLab.Database
 
         }
 
-        public static string StrToRecord(string s)
+        public static Record StrToRecord(string s, List<Type> types)
         {
+            try
+            {
+                Record record = new Record(types);
 
+                for (int i = 0; i < types.Count; i++)
+                {
+                    if (types[i].GetType() == System.Type.GetType("bool"))
+                    {
+                        bool? value = StrToBoolean(s.Substring(0, 1));
+
+                        if (value.HasValue)
+                        {
+                            record.data.Add(value.Value);
+                            s.Remove(0, 1);
+                        }
+                    }
+                    else if (record.data.GetType() == System.Type.GetType("string"))
+                    {
+                        string value = StrToVarchar(s.Substring(0, strSize));
+
+                        record.data.Add(value);
+                        s.Remove(0, strSize);
+                    }
+                    else if (record.data.GetType() == System.Type.GetType("int"))
+                    {
+                        int? value = StrToInteger(s.Substring(0, intSize));
+
+                        if (value.HasValue)
+                        {
+                            record.data.Add(value);
+                            s.Remove(0, intSize);
+                        }
+                    }
+                }
+                return record;
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
+                return null;
+            }
         }
 
         #endregion

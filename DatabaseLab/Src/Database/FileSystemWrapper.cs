@@ -33,7 +33,6 @@ namespace DatabaseLab.Database
         {
             string path = databasePath + '/' + tableName + ".dat";
             bool isSuccess = false;
-
             try
             {
                 if (!File.Exists(path))
@@ -61,11 +60,13 @@ namespace DatabaseLab.Database
                 if (File.Exists(pathTable) && File.Exists(pathUtile))
                 {
                     long length = 0;
+                    string converted = string.Empty;
+
                     using (FileStream fs = new FileStream(pathTable, FileMode.Open))
                     using (BinaryWriter writer = new BinaryWriter(fs))
                     {
                         length = fs.Length;
-                        string converted = Types.RecordToStr(record);
+                        converted = Types.RecordToStr(record);
 
                         writer.Write(StringToBytes(converted));
                         Logger.Write(String.Format("Record was successfully added in table {0}", tableName), Logger.Level.Info);
@@ -74,38 +75,42 @@ namespace DatabaseLab.Database
                     using (FileStream fs = new FileStream(pathUtile, FileMode.Open))
                     using (BinaryWriter writer = new BinaryWriter(fs))
                     {
-                        writer.Write(StringToBytes(""))
+                        writer.Write(GetHashCode(converted));
+                        writer.Write(StringToBytes(' ' + length.ToString() + '\n'));
+
+                        Logger.Write(String.Format("Hash was successfully added!"), Logger.Level.Info);
                     }
-
-                        // TODO: count hash of record, form the template with whitespaces and put it to the file,
-                        // write down the position and hash to the utility file.
-
-                        Logger.Write(String.Format("Record with hash {0} was successfully added in table {1}", 1, tableName), Logger.Level.Info);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Write(ex);
+                return false;
             }
 
-            return isSuccess;
-
+            return true;
         }
 
 
 
-        public static byte[] StringToBytes(string str)
+        private static byte[] StringToBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        public static string BytesToString(byte[] bytes)
+        private static string BytesToString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
+        }
+
+        private static byte[] GetHashCode(string s)
+        {
+            System.Security.Cryptography.SHA1 sha = System.Security.Cryptography.SHA1.Create();
+            return sha.ComputeHash(StringToBytes(s));
         }
 
         private static bool CreateUtilityFile(string tableName, List<Type> types, List<string> headers)

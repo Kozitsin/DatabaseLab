@@ -21,7 +21,7 @@ namespace DatabaseLab.Database
                 switch (types[i])
                 {
                     case Types.Type.VARCHAR:
-                        data.Add(default(string));
+                        data.Add(string.Empty);
                         break;
                     case Types.Type.BOOLEAN:
                         data.Add(default(bool));
