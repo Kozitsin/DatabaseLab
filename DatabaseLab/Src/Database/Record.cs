@@ -1,10 +1,11 @@
 ﻿using DatabaseLab.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DatabaseLab.Database
 {
-    public class Record
+    public class Record : IEquatable<Record>
     {
         #region Data Members
 
@@ -58,6 +59,41 @@ namespace DatabaseLab.Database
                 return false;
             }
         }
+
+        #region IEquable interface
+        public override int GetHashCode()
+        {
+            int hashcode = 0;
+            for (int i = 0; i < data.Count; i++)
+            {
+                hashcode ^= data[i].GetHashCode();
+            }
+
+            return hashcode;
+        }
+
+        public bool Equals(Record other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return data.SequenceEqual(other.data);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Record record = obj as Record;
+            if (record != null)
+            {
+                return Equals(record);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
 
         #endregion
     }

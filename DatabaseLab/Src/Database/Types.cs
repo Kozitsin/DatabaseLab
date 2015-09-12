@@ -28,14 +28,14 @@ namespace DatabaseLab.Database
         {
             if (s.Length > strSize)
             {
-                s.Remove(strSize - 1);
+                s = s.Remove(strSize - 1);
                 Logger.Write("String was reduced!", Logger.Level.Warn);
             }
             else
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(' ', strSize - s.Length);
-                s.Insert(s.Length, sb.ToString());
+                s = s.Insert(s.Length, sb.ToString());
             }
             return s;
         }
@@ -52,7 +52,7 @@ namespace DatabaseLab.Database
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(' ', intSize - s.Length);
-                s.Insert(s.Length, sb.ToString());
+                s = s.Insert(s.Length, sb.ToString());
 
                 return s;
             }
@@ -70,7 +70,7 @@ namespace DatabaseLab.Database
 
         private static string StrToVarchar(string s)
         {
-            s.TrimEnd(' ');
+            s = s.TrimEnd(' ');
             return s;
         }
 
@@ -78,7 +78,7 @@ namespace DatabaseLab.Database
         {
             try
             {
-                s.TrimEnd(' ');
+                s = s.TrimEnd(' ');
                 return Convert.ToInt32(s);
             }
             catch (Exception ex)
@@ -133,31 +133,31 @@ namespace DatabaseLab.Database
 
                 for (int i = 0; i < types.Count; i++)
                 {
-                    if (types[i].GetType() == System.Type.GetType("bool"))
+                    if (types[i] == Type.BOOLEAN)
                     {
                         bool? value = StrToBoolean(s.Substring(0, 1));
 
                         if (value.HasValue)
                         {
-                            record.data.Add(value.Value);
-                            s.Remove(0, 1);
+                            record.Edit(value.Value, i);
+                            s = s.Remove(0, 1);
                         }
                     }
-                    else if (record.data.GetType() == System.Type.GetType("string"))
+                    else if (types[i] == Type.VARCHAR)
                     {
                         string value = StrToVarchar(s.Substring(0, strSize));
 
-                        record.data.Add(value);
-                        s.Remove(0, strSize);
+                        record.Edit(value, i);
+                        s = s.Remove(0, strSize);
                     }
-                    else if (record.data.GetType() == System.Type.GetType("int"))
+                    else if (types[i] == Type.INTEGER)
                     {
                         int? value = StrToInteger(s.Substring(0, intSize));
 
                         if (value.HasValue)
                         {
-                            record.data.Add(value);
-                            s.Remove(0, intSize);
+                            record.Edit(value.Value, i);
+                            s = s.Remove(0, intSize);
                         }
                     }
                 }
