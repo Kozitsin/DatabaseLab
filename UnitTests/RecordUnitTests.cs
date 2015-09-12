@@ -2,12 +2,20 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DatabaseLab.Database;
 using System.Collections.Generic;
+using DatabaseLab.Logging;
+using System.IO;
 
 namespace UnitTests
 {
     [TestClass]
     public class RecordUnitTests
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Logger.pathToWrite = "./TestLog.dat";
+        }
+
         [TestMethod]
         public void RecordCreationWithAllTypes()
         {
@@ -77,6 +85,20 @@ namespace UnitTests
             bool res = record.Edit((int)1.23, 0);
 
             Assert.AreEqual(true, res);
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            try
+            {
+                File.Delete("./TestLog.dat");
+                Logger.pathToWrite = "Logs.dat";
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
