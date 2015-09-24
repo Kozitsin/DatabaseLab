@@ -10,13 +10,15 @@ namespace UnitTests
     [TestClass]
     public class DatabaseUnitTests
     {
+        Database DB = new Database();
+
         [TestInitialize]
         public void Initialize()
         {
             Logger.pathToWrite = "./TestLogs.dat";
 
-            Database.CreateDatabaseFolder();
-            Database.CreateTable("test",
+            DB.CreateDatabaseFolder();
+            DB.CreateTable("test",
                 new List<Types.Type>() { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR },
                 new List<string>() { "boolean", "integer", "varchar" });
         }
@@ -24,7 +26,7 @@ namespace UnitTests
         [TestMethod]
         public void TestCreatingFolder()
         {
-            Database.CreateDatabaseFolder();
+            DB.CreateDatabaseFolder();
 
             bool value = Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + '/' + "Data");
 
@@ -47,7 +49,7 @@ namespace UnitTests
         {
             List<Types.Type> types = new List<Types.Type>{ Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
-            bool value = Database.AddRecord("test", record);
+            bool value = DB.AddRecord("test", record);
 
             Assert.AreEqual(true, value);
         }
@@ -57,9 +59,9 @@ namespace UnitTests
         {
             List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
             Record record = new Record(types);
-            bool value = Database.AddRecord("test", record);
+            bool value = DB.AddRecord("test", record);
 
-            List<Record> result = Database.Search("test", record);
+            List<Record> result = DB.Search("test", record);
 
             Assert.AreEqual(1, result.Count);
         }
@@ -75,12 +77,46 @@ namespace UnitTests
             record2.Edit(12, 1);
             record2.Edit("testing purpose", 2);
 
-            Database.AddRecord("test", record1);
-            Database.AddRecord("test", record2);
+            DB.AddRecord("test", record1);
+            DB.AddRecord("test", record2);
 
-            List<Record> result = Database.Search("test", record2);
+            List<Record> result = DB.Search("test", record2);
 
             Assert.AreEqual(record2, result[0]);
+        }
+
+        [TestMethod]
+        public void TestDeleteRecord()
+        {
+            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            Record record = new Record(types);
+
+            record.Edit(true, 0);
+            record.Edit(12, 1);
+            record.Edit("testing purpose", 2);
+            DB.AddRecord("test", record);
+
+            bool value = DB.DeleteRecord("test", record);
+
+            Assert.AreEqual(true, value);
+        }
+
+        [TestMethod]
+        public void TestDeleteFictionalRecord()
+        {
+            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            Record record1 = new Record(types);
+            Record record2 = new Record(types);
+
+            record2.Edit(true, 0);
+            record2.Edit(12, 1);
+            record2.Edit("testing purpose", 2);
+
+            DB.AddRecord("test", record2);
+
+            bool value = DB.DeleteRecord("test", record1);
+
+            Assert.AreEqual(false, value);
         }
 
         [TestCleanup]

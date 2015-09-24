@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace DatabaseLab.Database
 {
-    public static class Database
+    public class Database : IDatabase
     {
         #region Data Members
 
@@ -19,7 +19,7 @@ namespace DatabaseLab.Database
 
         #region Public Methods
 
-        public static void CreateDatabaseFolder()
+        public void CreateDatabaseFolder()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace DatabaseLab.Database
             }
         }
 
-        public static bool CreateTable(string tableName, List<Types.Type> types, List<string> headers)
+        public bool CreateTable(string tableName, List<Types.Type> types, List<string> headers)
         {
             string path = databasePath + '/' + tableName + ".dat";
             bool isSuccess = false;
@@ -55,123 +55,61 @@ namespace DatabaseLab.Database
             return isSuccess;
         }
 
-        public static bool AddRecord(string tableName, Record record)
+        public bool AddRecord(string tableName, Record record)
         {
-            // TODO: need refactoring + wrapping hash table info
-
-            string pathTable = databasePath + '/' + tableName + ".dat";
-            string pathHash = databasePath + '/' + tableName + "_hash.dat";
-            string pathFreeSpace = databasePath + '/' + tableName + "_freespace.dat";
-
             try
             {
+                string pathTable = databasePath + '/' + tableName + ".dat";
+                string pathHash = databasePath + '/' + tableName + "_hash.dat";
+                string pathFreeSpace = databasePath + '/' + tableName + "_freespace.dat";
+
                 if (File.Exists(pathTable) && File.Exists(pathHash) && File.Exists(pathFreeSpace))
                 {
-                    string converted = string.Empty;
+                    long position = SeekEmptySpace(pathFreeSpace);
 
-                    int emptyPosition = SeekEmptySpace(pathFreeSpace);
-                    if (emptyPosition == -1)
-                    {
+                    WriteData(pathTable, ref position, record);
+                    WriteHash(pathHash, position, record);
 
-                        long length = 0;
-
-                        using (FileStream fs = new FileStream(pathTable, FileMode.Append))
-                        using (BinaryWriter writer = new BinaryWriter(fs))
-                        {
-                            length = fs.Length;
-                            converted = Types.RecordToStr(record);
-
-                            writer.Write(StringToBytes(converted));
-                            Logger.Write(String.Format("Record was successfully added in table {0}", tableName), Logger.Level.Info);
-                        }
-
-                        using (FileStream fs = new FileStream(pathHash, FileMode.Append))
-                        using (BinaryWriter writer = new BinaryWriter(fs))
-                        {
-                            writer.Write(GetHashCode(converted));
-                            writer.Write(StringToBytes(' ' + length.ToString() + '\n'));
-
-                            Logger.Write(String.Format("Hash was successfully added!"), Logger.Level.Info);
-                        }
-                    }
-                    else
-                    {
-                        using (FileStream fs = new FileStream(pathTable, FileMode.Append))
-                        using (BinaryWriter writer = new BinaryWriter(fs))
-                        {
-                            converted = Types.RecordToStr(record);
-
-                            writer.Write(StringToBytes(converted), emptyPosition, converted.Length);
-                            Logger.Write(String.Format("Record was successfully added in table {0}", tableName), Logger.Level.Info);
-                        }
-
-                        using (FileStream fs = new FileStream(pathHash, FileMode.Append))
-                        using (BinaryWriter writer = new BinaryWriter(fs))
-                        {
-                            writer.Write(GetHashCode(converted));
-                            writer.Write(StringToBytes(' ' + emptyPosition.ToString() + '\n'));
-
-                            Logger.Write(String.Format("Hash was successfully added!"), Logger.Level.Info);
-                        }
-                    }
-
+                    return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 Logger.Write(ex);
                 return false;
             }
-
-            return true;
         }
 
-        public static List<Record> Search(string tableName, Record record)
+        public List<Record> Search(string tableName, Record record)
         {
-            // TODO: work around problem with hashes and reading them
             try
             {
                 string pathTable = databasePath + '/' + tableName + ".dat";
-                string pathHash = databasePath + '/' + tableName + "_hash.dat";
 
-                string hash = BytesToString(GetHashCode(Types.RecordToStr(record)));
-
-                string line = string.Empty;
-
-                using (StreamReader sr = new StreamReader(pathHash, Encoding.Unicode))
-                {
-                    while ((line = sr.ReadLine()) != null)
-                        if (line.Contains(hash))
-                            break;
-                }
-
-                if (string.IsNullOrEmpty(line))
+                int[] pointers = FindIndex(tableName, record);
+                if (pointers == null)
                 {
                     return null;
                 }
-                else
+
+                List<Record> result = new List<Record>();
+
+                int length = GetLengthOfRecord(tableName);
+                List<Types.Type> types = GetTypesOfRecord(tableName);
+
+                byte[] buffer = new byte[length * 2];
+
+                using (FileStream fs = new FileStream(pathTable, FileMode.Open))
+                using (BinaryReader reader = new BinaryReader(fs))
                 {
-                    line = line.Remove(0, hash.Length + 1);
-
-                    int[] pointers = Array.ConvertAll(line.Split(' '), int.Parse);
-                    List<Record> result = new List<Record>();
-
-                    int length = GetLengthOfRecord(tableName);
-                    List<Types.Type> types = GetTypesOfRecord(tableName);
-
-                    byte[] buffer = new byte[length * 2];
-
-                    using (FileStream fs = new FileStream(pathTable, FileMode.Open))
-                    using (BinaryReader reader = new BinaryReader(fs))
+                    foreach (var item in pointers)
                     {
-                        foreach (var item in pointers)
-                        {
-                            reader.BaseStream.Seek(item, SeekOrigin.Begin);
-                            reader.Read(buffer, 0, buffer.Length);
-                            result.Add(Types.StrToRecord(BytesToString(buffer), types));
-                        }
-                        return result;
+                        reader.BaseStream.Seek(item, SeekOrigin.Begin);
+                        reader.Read(buffer, 0, buffer.Length);
+                        result.Add(Types.StrToRecord(BytesToString(buffer), types));
                     }
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -179,10 +117,76 @@ namespace DatabaseLab.Database
                 Logger.Write(ex);
                 return null;
             }
-
         }
 
-        public static bool DeleteRecord(string tableName, Record record)
+        public bool DeleteRecord(string tableName, Record record)
+        {
+            try
+            {
+                string pathTable = databasePath + '/' + tableName + ".dat";
+                string pathHash = databasePath + '/' + tableName + "_hash.dat";
+                string pathFreeSpace = databasePath + '/' + tableName + "_freespace.dat";
+
+                int[] position = FindIndex(tableName, record);
+
+                using (StreamWriter writer = new StreamWriter(pathTable))
+                {
+                    for (int i = 0; i < position.Length; i++)
+                    {
+                        writer.BaseStream.Seek(position[i], SeekOrigin.Begin);
+                        writer.Write(GenerateEmptyString(tableName, record));
+                    }
+                }
+
+                using (StreamWriter writer = new StreamWriter(pathFreeSpace))
+                {
+                    for (int i = 0; i < position.Length; i++)
+                        writer.WriteLine(position[i]);
+                }
+
+                using (StreamWriter writer = new StreamWriter(pathHash))
+                {
+                    RemoveHash(pathHash, GetHashCode(Types.RecordToStr(record)));
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Logger.Write(ex);
+                return false;
+            }
+        }
+
+        public bool Update(string tableName, Record original, Record modified)
+        {
+            try
+            {
+                bool value = true;
+
+                value &= DeleteRecord(tableName, original);
+                value &= AddRecord(tableName, modified);
+
+                return value;
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
+                return false;
+            }
+        }
+
+        bool BackUp(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Restore(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        bool Import(string tableName)
         {
             throw new NotImplementedException();
         }
@@ -190,27 +194,27 @@ namespace DatabaseLab.Database
 
         #region Private Methods
 
-        private static byte[] StringToBytes(string str)
+        private byte[] StringToBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        private static string BytesToString(byte[] bytes)
+        private string BytesToString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
-        private static byte[] GetHashCode(string s)
+        private byte[] GetHashCode(string s)
         {
             System.Security.Cryptography.SHA1 sha = System.Security.Cryptography.SHA1.Create();
             return sha.ComputeHash(StringToBytes(s));
         }
 
-        private static bool CreateUtilityFiles(string tableName, List<Types.Type> types, List<string> headers)
+        private bool CreateUtilityFiles(string tableName, List<Types.Type> types, List<string> headers)
         {
             string path = databasePath + '/' + tableName;
 
@@ -248,7 +252,7 @@ namespace DatabaseLab.Database
             return true;
         }
 
-        private static string ConcatHeaders(List<Types.Type> types, List<string> headers)
+        private string ConcatHeaders(List<Types.Type> types, List<string> headers)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < headers.Count; i++)
@@ -260,20 +264,34 @@ namespace DatabaseLab.Database
             return sb.ToString();
         }
 
-        private static int SeekEmptySpace(string path)
+        private int SeekEmptySpace(string path)
         {
             try
             {
-                string[] lines = File.ReadAllLines(path);
-                if (lines.Count() <= 0)
+                string data = string.Empty;
+                int dataPosition = -1;
+
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    return -1;
+                    data = reader.ReadLine();
                 }
-                else
+
+                string[] rawData = data.Split(' ');
+                if (rawData.Length > 0)
                 {
-                    File.WriteAllLines(path, lines.Take(lines.Count() - 1));
-                    return Convert.ToInt32(lines[lines.Count() - 1]);
+                    dataPosition = Convert.ToInt32(rawData.Last());
                 }
+
+                // make overwrite
+                using (StreamWriter writer = new StreamWriter(path, false))
+                {
+                    if (rawData.Length > 1)
+                        writer.WriteLine(rawData.Take(rawData.Length - 1));
+                    else
+                        writer.WriteLine();
+
+                }
+                return dataPosition;
             }
             catch (Exception ex)
             {
@@ -282,7 +300,7 @@ namespace DatabaseLab.Database
             }
         }
 
-        private static int GetLengthOfRecord(string tableName)
+        private int GetLengthOfRecord(string tableName)
         {
             try
             {
@@ -313,7 +331,7 @@ namespace DatabaseLab.Database
             }
         }
 
-        private static List<Types.Type> GetTypesOfRecord(string tableName)
+        private List<Types.Type> GetTypesOfRecord(string tableName)
         {
             string pathHeader = databasePath + '/' + tableName + "_headers.dat";
             try
@@ -347,6 +365,128 @@ namespace DatabaseLab.Database
                 Logger.Write(ex);
                 return null;
             }
+        }
+
+        // calculate hash and return index of record
+        private int[] FindIndex(string tableName, Record record)
+        {
+            try
+            {
+                string pathHash = databasePath + '/' + tableName + "_hash.dat";
+                string hash = BytesToString(GetHashCode(Types.RecordToStr(record)));
+                string line = string.Empty;
+
+                using (StreamReader sr = new StreamReader(pathHash))
+                {
+                    while ((line = sr.ReadLine()) != null)
+                        if (line.Contains(hash))
+                            break;
+                }
+
+                if (string.IsNullOrEmpty(line))
+                {
+                    return null;
+                }
+                else
+                {
+                    line = line.Remove(0, hash.Length + 1);
+                    int[] pointers = Array.ConvertAll(line.Split(' '), int.Parse);
+                    return pointers;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
+                return null;
+            }
+        }
+
+        private string GenerateEmptyString(string tableName, Record record)
+        {
+            StringBuilder sb = new StringBuilder();
+            int length = GetLengthOfRecord(tableName);
+
+            sb.Append(' ', length);
+
+            return sb.ToString();
+        }
+
+        private bool HashExists(string path, byte[] hashCode, out int counter)
+        {
+            counter = 0;
+            try
+            {
+                string line = string.Empty;
+                string hash = BytesToString(hashCode);
+
+                using (StreamReader sr = new StreamReader(path, Encoding.Unicode))
+                {
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        counter++;
+                        if (line.Contains(hash))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
+                return false;
+            }
+        }
+
+        private void WriteData(string pathTable, ref long position, Record record)
+        {
+            using (FileStream fs = new FileStream(pathTable, FileMode.Open))
+            using (BinaryWriter writer = new BinaryWriter(fs))
+            {
+                if (position == -1)
+                    position = fs.Length;
+
+                string converted = Types.RecordToStr(record);
+
+                writer.BaseStream.Position = position;
+                writer.Write(StringToBytes(converted));
+                Logger.Write("Record was successfully added in table", Logger.Level.Info);
+            }
+        }
+
+        private void WriteHash(string pathHash, long position, Record record)
+        {
+            byte[] hash = GetHashCode(Types.RecordToStr(record));
+
+            using (StreamWriter writer = new StreamWriter(pathHash))
+            {
+                int counter = 0;
+                if (!HashExists(pathHash, hash, out counter))
+                {
+                    writer.WriteLine(BytesToString(hash) + ' ' + position);
+                }
+                else
+                {
+                    string prevValue = RemoveHash(pathHash, hash);
+                    writer.WriteLine(prevValue + ' ' + position);
+                }
+                Logger.Write("Hash was successfully added!", Logger.Level.Info);
+            }
+        }
+
+        private string RemoveHash(string pathHash, byte[] hash)
+        {
+            int counter = 0;
+            if (HashExists(pathHash, hash, out counter))
+            {
+                string[] arrLine = File.ReadAllLines(pathHash);
+                File.WriteAllLines(pathHash, arrLine.Take(counter));
+                File.WriteAllLines(pathHash, arrLine.Skip(counter + 1));
+
+                return arrLine[counter];
+            }
+            return string.Empty;
         }
 
         #endregion
