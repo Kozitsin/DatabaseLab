@@ -8,9 +8,9 @@ using System.Windows;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("DatabaseLab")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("HSE lab project")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Kozitsin Alexander")]
 [assembly: AssemblyProduct("DatabaseLab")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]

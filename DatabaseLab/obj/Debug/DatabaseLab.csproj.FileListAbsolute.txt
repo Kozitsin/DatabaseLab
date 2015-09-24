@@ -10,3 +10,4 @@ C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\D
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.csproj.GenerateResource.Cache
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.exe
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.pdb
+C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\obj\Debug\DatabaseLab.csprojResolveAssemblyReference.cache

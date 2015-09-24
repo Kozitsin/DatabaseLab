@@ -9,9 +9,9 @@ namespace DatabaseLab.Database
     {
         #region Data Memebers
 
-        private static int intSize = 11;
-        private static int strSize = 100;
-
+        public static int intSize = 11;
+        public static int strSize = 100;
+        public static int boolSize = 1;
         #endregion
 
         #region Private Methods
