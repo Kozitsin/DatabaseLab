@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DatabaseLab
+namespace DatabaseLab.Forms
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Interaction logic for Add.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Add : Page
     {
-        public MainWindow()
+        public Add()
         {
             InitializeComponent();
-            App.DB.CreateDatabaseFolder();
-            frame.Content = App.mainPage;
         }
     }
 }

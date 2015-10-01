@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DatabaseLab.Database
+namespace DatabaseLab.DataBase
 {
     public interface IDatabase
     {
@@ -18,7 +18,7 @@ namespace DatabaseLab.Database
 
         bool BackUp(string tableName);
 
-        bool Restore(string path);
+        bool Restore(string tableName);
 
         bool Import(string tableName);
     }

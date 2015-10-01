@@ -1,6 +1,6 @@
 ﻿using System;
 using DatabaseLab.Logging;
-using DatabaseLab.Database;
+using DatabaseLab.DataBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Collections.Generic;
@@ -117,6 +117,28 @@ namespace UnitTests
             bool value = DB.DeleteRecord("test", record1);
 
             Assert.AreEqual(false, value);
+        }
+
+        [TestMethod]
+        public void TestImportToCSV()
+        {
+            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            Record record1 = new Record(types);
+            Record record2 = new Record(types);
+
+            record1.Edit(false, 0);
+            record1.Edit(123, 1);
+            record1.Edit("first record", 2);
+
+            record2.Edit(true, 0);
+            record2.Edit(12, 1);
+            record2.Edit("testing purpose", 2);
+
+            DB.AddRecord("test", record1);
+            DB.AddRecord("test", record2);
+
+            bool value = DB.Import("test");
+            Assert.AreEqual(true, value);
         }
 
         [TestCleanup]

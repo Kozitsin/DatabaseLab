@@ -1,4 +1,4 @@
-﻿using DatabaseLab.Database;
+﻿using DatabaseLab.DataBase;
 using DatabaseLab.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

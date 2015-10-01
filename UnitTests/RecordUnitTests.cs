@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DatabaseLab.Database;
+using DatabaseLab.DataBase;
 using System.Collections.Generic;
 using DatabaseLab.Logging;
 using System.IO;
