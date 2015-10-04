@@ -19,8 +19,8 @@ namespace UnitTests
 
             DB.CreateDatabaseFolder();
             DB.CreateTable("test",
-                new List<Types.Type>() { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR },
-                new List<string>() { "boolean", "integer", "varchar" });
+                new List<Types.Type>() { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER },
+                new List<string>() { "varchar", "boolean", "integer" });
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace UnitTests
         [TestMethod]
         public void TestAddingData()
         {
-            List<Types.Type> types = new List<Types.Type>{ Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type>{ Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record = new Record(types);
             bool value = DB.AddRecord("test", record);
 
@@ -57,11 +57,11 @@ namespace UnitTests
         [TestMethod]
         public void TestSearchingEmptyRecordData()
         {
-            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type> { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record = new Record(types);
             bool value = DB.AddRecord("test", record);
 
-            List<Record> result = DB.Search("test", record);
+            List<Record> result = DB.Search("test", record.data[0].ToString());
 
             Assert.AreEqual(1, result.Count);
         }
@@ -69,18 +69,18 @@ namespace UnitTests
         [TestMethod]
         public void TestSearchingSomeRecordData()
         {
-            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type> { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record1 = new Record(types);
             Record record2 = new Record(types);
 
-            record2.Edit(true, 0);
-            record2.Edit(12, 1);
-            record2.Edit("testing purpose", 2);
+            record2.Edit("testing purpose", 0);
+            record2.Edit(true, 1);
+            record2.Edit(12, 2);
 
             DB.AddRecord("test", record1);
-            DB.AddRecord("test", record2);
+            DB.AddRecord("test", record2); 
 
-            List<Record> result = DB.Search("test", record2);
+            List<Record> result = DB.Search("test", record2.data[0].ToString());
 
             Assert.AreEqual(record2, result[0]);
         }
@@ -88,15 +88,16 @@ namespace UnitTests
         [TestMethod]
         public void TestDeleteRecord()
         {
-            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type> { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record = new Record(types);
 
-            record.Edit(true, 0);
-            record.Edit(12, 1);
-            record.Edit("testing purpose", 2);
+            record.Edit("testing purpose", 0);
+            record.Edit(true, 1);
+            record.Edit(12, 2);
+
             DB.AddRecord("test", record);
 
-            bool value = DB.DeleteRecord("test", record);
+            bool value = DB.DeleteRecord("test", record.data[0].ToString());
 
             Assert.AreEqual(true, value);
         }
@@ -104,17 +105,17 @@ namespace UnitTests
         [TestMethod]
         public void TestDeleteFictionalRecord()
         {
-            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type> { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record1 = new Record(types);
             Record record2 = new Record(types);
 
-            record2.Edit(true, 0);
-            record2.Edit(12, 1);
-            record2.Edit("testing purpose", 2);
+            record2.Edit("testing purpose", 0);
+            record2.Edit(true, 1);
+            record2.Edit(12, 2);
 
             DB.AddRecord("test", record2);
 
-            bool value = DB.DeleteRecord("test", record1);
+            bool value = DB.DeleteRecord("test", record1.data[0].ToString());
 
             Assert.AreEqual(false, value);
         }
@@ -122,17 +123,17 @@ namespace UnitTests
         [TestMethod]
         public void TestImportToCSV()
         {
-            List<Types.Type> types = new List<Types.Type> { Types.Type.BOOLEAN, Types.Type.INTEGER, Types.Type.VARCHAR };
+            List<Types.Type> types = new List<Types.Type> { Types.Type.VARCHAR, Types.Type.BOOLEAN, Types.Type.INTEGER };
             Record record1 = new Record(types);
             Record record2 = new Record(types);
 
-            record1.Edit(false, 0);
-            record1.Edit(123, 1);
-            record1.Edit("first record", 2);
+            record1.Edit("first record", 0);
+            record1.Edit(false, 1);
+            record1.Edit(123, 2);
 
-            record2.Edit(true, 0);
-            record2.Edit(12, 1);
-            record2.Edit("testing purpose", 2);
+            record2.Edit("testing purpose", 0);
+            record2.Edit(true, 1);
+            record2.Edit(12, 2);
 
             DB.AddRecord("test", record1);
             DB.AddRecord("test", record2);

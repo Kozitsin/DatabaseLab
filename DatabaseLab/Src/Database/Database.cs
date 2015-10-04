@@ -92,7 +92,7 @@ namespace DatabaseLab.DataBase
                     long position = SeekEmptySpace(pathFreeSpace);
 
                     WriteData(pathTable, ref position, record);
-                    WriteHash(pathHash, position, record);
+                    WriteHash(pathHash, position, record.data[0].ToString());
 
                     return true;
                 }
@@ -105,13 +105,13 @@ namespace DatabaseLab.DataBase
             }
         }
 
-        public List<Record> Search(string tableName, Record record)
+        public List<Record> Search(string tableName, string s)
         {
             try
             {
                 string pathTable = databasePath + '/' + tableName + ".dat";
 
-                int[] pointers = FindIndex(tableName, record);
+                int[] pointers = FindIndex(tableName, s);
                 if (pointers == null)
                 {
                     return null;
@@ -143,7 +143,7 @@ namespace DatabaseLab.DataBase
             }
         }
 
-        public bool DeleteRecord(string tableName, Record record)
+        public bool DeleteRecord(string tableName, string s)
         {
             try
             {
@@ -151,14 +151,14 @@ namespace DatabaseLab.DataBase
                 string pathHash = databasePath + '/' + tableName + "_hash.dat";
                 string pathFreeSpace = databasePath + '/' + tableName + "_freespace.dat";
 
-                int[] position = FindIndex(tableName, record);
+                int[] position = FindIndex(tableName, s);
 
                 using (StreamWriter writer = new StreamWriter(pathTable))
                 {
                     for (int i = 0; i < position.Length; i++)
                     {
                         writer.BaseStream.Seek(position[i], SeekOrigin.Begin);
-                        writer.Write(GenerateEmptyString(tableName, record));
+                        writer.Write(GenerateEmptyString(tableName));
                     }
                 }
 
@@ -170,7 +170,7 @@ namespace DatabaseLab.DataBase
 
                 using (StreamWriter writer = new StreamWriter(pathHash))
                 {
-                    RemoveHash(pathHash, GetHashCode(Types.RecordToStr(record)));
+                    RemoveHash(pathHash, GetHashCode(s));
                 }
                 return true;
             }
@@ -187,7 +187,7 @@ namespace DatabaseLab.DataBase
             {
                 bool value = true;
 
-                value &= DeleteRecord(tableName, original);
+                value &= DeleteRecord(tableName, original.data[0].ToString());
                 value &= AddRecord(tableName, modified);
 
                 return value;
@@ -301,16 +301,12 @@ namespace DatabaseLab.DataBase
 
         private byte[] StringToBytes(string str)
         {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
+            return Encoding.Unicode.GetBytes(str);
         }
 
         private string BytesToString(byte[] bytes)
         {
-            char[] chars = new char[bytes.Length / sizeof(char)];
-            Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
+            return Encoding.Unicode.GetString(bytes);
         }
 
         private byte[] GetHashCode(string s)
@@ -491,12 +487,12 @@ namespace DatabaseLab.DataBase
             }
         }
 
-        private int[] FindIndex(string tableName, Record record)
+        private int[] FindIndex(string tableName, string s)
         {
             try
             {
                 string pathHash = databasePath + '/' + tableName + "_hash.dat";
-                string hash = BytesToString(GetHashCode(Types.RecordToStr(record)));
+                string hash = BytesToString(GetHashCode(s));
                 string line = string.Empty;
 
                 using (StreamReader sr = new StreamReader(pathHash))
@@ -524,7 +520,7 @@ namespace DatabaseLab.DataBase
             }
         }
 
-        private string GenerateEmptyString(string tableName, Record record)
+        private string GenerateEmptyString(string tableName)
         {
             StringBuilder sb = new StringBuilder();
             int length = GetLengthOfRecord(tableName);
@@ -578,23 +574,32 @@ namespace DatabaseLab.DataBase
             }
         }
 
-        private void WriteHash(string pathHash, long position, Record record)
+        private void WriteHash(string pathHash, long position, string s)
         {
-            byte[] hash = GetHashCode(Types.RecordToStr(record));
-
-            using (StreamWriter writer = new StreamWriter(pathHash))
+            try
             {
+                byte[] hash = GetHashCode(s);
                 int counter = 0;
                 if (!HashExists(pathHash, hash, out counter))
                 {
-                    writer.WriteLine(BytesToString(hash) + ' ' + position);
+                    using (StreamWriter writer = new StreamWriter(pathHash, true, Encoding.Unicode))
+                    {
+                        writer.WriteLine(BytesToString(hash) + ' ' + position);
+                    }
                 }
                 else
                 {
                     string prevValue = RemoveHash(pathHash, hash);
-                    writer.WriteLine(prevValue + ' ' + position);
+                    using (StreamWriter writer = new StreamWriter(pathHash, true, Encoding.Unicode))
+                    {
+                        writer.WriteLine(prevValue + ' ' + position);
+                    }
                 }
                 Logger.Write("Hash was successfully added!", Logger.Level.Info);
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(ex);
             }
         }
 
@@ -617,6 +622,5 @@ namespace DatabaseLab.DataBase
 }
 
 //TODO: implement uid auto processing
-//      make hashes by string not hte whole record
 //      make GUI more interesting
 //      implement all stubs.

@@ -10,9 +10,9 @@ namespace DatabaseLab.DataBase
 
         bool AddRecord(string tableName, Record record);
 
-        List<Record> Search(string tableName, Record record);
+        List<Record> Search(string tableName, string s);
 
-        bool DeleteRecord(string tableName, Record record);
+        bool DeleteRecord(string tableName, string s);
 
         bool Update(string tableName, Record original, Record modified);
 
