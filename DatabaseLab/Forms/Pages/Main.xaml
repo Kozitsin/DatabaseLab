@@ -14,7 +14,7 @@
         <Button x:Name="addDataButton" Content="Add" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="75" Click="addDataButton_Click"/>
         <Button x:Name="deleteDataButton" Content="Delete" HorizontalAlignment="Left" Margin="10,193,0,0" VerticalAlignment="Top" Width="75" Click="deleteDataButton_Click"/>
         <Button x:Name="editDataButton" Content="Edit" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Width="75" Click="editDataButton_Click"/>
-        <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Left" Margin="10,247,0,0" VerticalAlignment="Top" Width="75" Click="searchButton_Click"/>
+        <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Left" Margin="10,247,0,0" VerticalAlignment="Top" Width="75" Click="searchButton_Click" IsEnabled="False"/>
         <Button x:Name="importButton" Content="Import" HorizontalAlignment="Left" Margin="206,166,0,0" VerticalAlignment="Top" Width="75" Click="importButton_Click"/>
         <Button x:Name="backupButton" Content="Back up" HorizontalAlignment="Left" Margin="206,193,0,0" VerticalAlignment="Top" Width="75" Click="backupButton_Click"/>
         <Button x:Name="restoreButton" Content="Restore" HorizontalAlignment="Left" Margin="206,220,0,0" VerticalAlignment="Top" Width="75" Click="restoreButton_Click"/>

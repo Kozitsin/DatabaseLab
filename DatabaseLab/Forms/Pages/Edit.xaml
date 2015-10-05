@@ -9,6 +9,16 @@
       Title="Edit">
 
     <Grid>
-        
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="39,0,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Uid: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-3,0,0"/>
+        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="231" Margin="0,28,0,0" VerticalAlignment="Top" Width="290">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="135,264,0,0" VerticalAlignment="Top" Width="75" Click="applyButton_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="215,264,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click"/>
     </Grid>
 </Page>

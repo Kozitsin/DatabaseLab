@@ -9,6 +9,16 @@
       Title="Add">
 
     <Grid>
-        
+        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="193" Margin="0,40,0,0" VerticalAlignment="Top" Width="300">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <Label x:Name="label" Content="Enter record:" HorizontalAlignment="Left" Margin="4,6,0,0" VerticalAlignment="Top" Width="296"/>
+        <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="116,268,0,0" VerticalAlignment="Top" Width="75" Click="applyButton_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="196,268,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click"/>
+
     </Grid>
 </Page>

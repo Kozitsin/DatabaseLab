@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Александр\Documents\GitHub\DatabaseLab\DatabaseLab\Forms\App.xaml
-6-1048277860
+71270708460
 
-1960815960
+201519500768
 13-127377252
-Forms\Pages\Add.xaml;Forms\Pages\Edit.xaml;Forms\Pages\Config.xaml;Forms\Pages\Main.xaml;Forms\MainWindow.xaml;Forms\Pages\Search.xaml;
+Forms\Pages\Delete.xaml;Forms\Pages\Add.xaml;Forms\Pages\Edit.xaml;Forms\Pages\Config.xaml;Forms\Pages\Main.xaml;Forms\MainWindow.xaml;Forms\Pages\Search.xaml;
 
-False
+True
 

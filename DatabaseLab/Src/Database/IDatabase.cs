@@ -14,7 +14,7 @@ namespace DatabaseLab.DataBase
 
         bool DeleteRecord(string tableName, string s);
 
-        bool Update(string tableName, Record original, Record modified);
+        bool Update(string tableName, int uid, Record modified);
 
         bool BackUp(string tableName);
 

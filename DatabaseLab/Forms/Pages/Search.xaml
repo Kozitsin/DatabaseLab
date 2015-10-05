@@ -9,6 +9,16 @@
       Title="Search">
 
     <Grid>
-        
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="140"/>
+        <Button x:Name="uidButton" Content="Uid" HorizontalAlignment="Left" Margin="145,1,0,0" VerticalAlignment="Top" Width="75" Click="uidButton_Click"/>
+        <Button x:Name="stringButton" Content="String" HorizontalAlignment="Left" Margin="225,1,0,0" VerticalAlignment="Top" Width="75" Click="stringButton_Click"/>
+        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="272" Margin="0,28,0,0" VerticalAlignment="Top" Width="300">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
     </Grid>
 </Page>
