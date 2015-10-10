@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DatabaseLab.Database
+namespace DatabaseLab.DataBase
 {
     public interface IDatabase
     {
@@ -10,15 +10,15 @@ namespace DatabaseLab.Database
 
         bool AddRecord(string tableName, Record record);
 
-        List<Record> Search(string tableName, Record record);
+        List<Record> Search(string tableName, string s);
 
-        bool DeleteRecord(string tableName, Record record);
+        bool DeleteRecord(string tableName, string s);
 
-        bool Update(string tableName, Record original, Record modified);
+        bool Update(string tableName, int uid, Record modified);
 
         bool BackUp(string tableName);
 
-        bool Restore(string path);
+        bool Restore(string tableName);
 
         bool Import(string tableName);
     }

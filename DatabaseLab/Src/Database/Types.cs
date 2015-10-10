@@ -3,7 +3,7 @@ using System.Text;
 using System;
 using System.Collections.Generic;
 
-namespace DatabaseLab.Database
+namespace DatabaseLab.DataBase
 {
     public static class Types
     {

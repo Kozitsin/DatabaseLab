@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DatabaseLab.Database
+namespace DatabaseLab.DataBase
 {
     public class Record : IEquatable<Record>
     {

@@ -1,0 +1,27 @@
+﻿<Page x:Class="DatabaseLab.Forms.Main"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DatabaseLab.Forms"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="Main">
+
+    <Grid Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
+        <Button x:Name="createTableButton" Content="Create" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" Width="75" Click="createTableButton_Click"/>
+        <Button x:Name="deleteTableButton" Content="Delete" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Width="75" Click="deleteTableButton_Click"/>
+        <Button x:Name="addDataButton" Content="Add" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="75" Click="addDataButton_Click"/>
+        <Button x:Name="deleteDataButton" Content="Delete" HorizontalAlignment="Left" Margin="10,193,0,0" VerticalAlignment="Top" Width="75" Click="deleteDataButton_Click"/>
+        <Button x:Name="editDataButton" Content="Edit" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Width="75" Click="editDataButton_Click"/>
+        <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Left" Margin="10,247,0,0" VerticalAlignment="Top" Width="75" Click="searchButton_Click" IsEnabled="False"/>
+        <Button x:Name="importButton" Content="Import" HorizontalAlignment="Left" Margin="206,166,0,0" VerticalAlignment="Top" Width="75" Click="importButton_Click"/>
+        <Button x:Name="backupButton" Content="Back up" HorizontalAlignment="Left" Margin="206,193,0,0" VerticalAlignment="Top" Width="75" Click="backupButton_Click"/>
+        <Button x:Name="restoreButton" Content="Restore" HorizontalAlignment="Left" Margin="206,220,0,0" VerticalAlignment="Top" Width="75" Click="restoreButton_Click"/>
+        <Label Content="Get started:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Data operations:" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="100"/>
+        <Label Content="Additional functionality:" HorizontalAlignment="Left" Margin="152,135,0,0" VerticalAlignment="Top" Width="138"/>
+        <Label Content="Table Name:" HorizontalAlignment="Left" Margin="104,10,0,0" VerticalAlignment="Top" Width="177"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="104,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="186"/>
+    </Grid>
+</Page>
