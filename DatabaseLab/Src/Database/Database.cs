@@ -127,7 +127,8 @@ namespace DatabaseLab.DataBase
                 {
                     foreach (var item in pointers)
                     {
-                        reader.BaseStream.Seek(item, SeekOrigin.Begin);
+                        //reader.BaseStream.Seek(item, SeekOrigin.Begin);
+                        reader.BaseStream.Position = item;
                         reader.Read(buffer, 0, buffer.Length);
                         result.Add(Types.StrToRecord(BytesToString(buffer), types));
                     }
@@ -176,7 +177,8 @@ namespace DatabaseLab.DataBase
 
                     for (int i = 0; i < position.Length; i++)
                     {
-                        writer.BaseStream.Seek(position[i], SeekOrigin.Begin);
+                        //writer.BaseStream.Seek(position[i], SeekOrigin.Begin);
+                        writer.BaseStream.Position = position[i];
                         writer.Write(buffer, 0, buffer.Length);
                     }
                 }
@@ -353,9 +355,10 @@ namespace DatabaseLab.DataBase
                 using (FileStream fs = new FileStream(pathTable, FileMode.Open))
                 using (BinaryReader reader = new BinaryReader(fs, Encoding.Unicode))
                 {
-                        reader.BaseStream.Seek(length, SeekOrigin.Begin);
-                        reader.Read(buffer, 0, buffer.Length);
-                        result = Types.StrToRecord(BytesToString(buffer), types);
+                    //reader.BaseStream.Seek(length, SeekOrigin.Begin);
+                    reader.BaseStream.Position = length;
+                    reader.Read(buffer, 0, buffer.Length);
+                    result = Types.StrToRecord(BytesToString(buffer), types);
                 }
                 return result;
 

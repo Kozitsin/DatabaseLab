@@ -43,9 +43,10 @@ namespace Benchmark
                 record.Edit(RandomString(25), 0);
                 record.Edit(RandomString(10), 1);
                 record.Edit(Convert.ToBoolean(rnd.Next() % 2), 2);
+                DB.AddRecord(tableName, record);
 
                 sw.Start();
-                DB.DeleteRecord(tableName, RandomString(25));
+                DB.Search(tableName, i*2);
                 sw.Stop();
 
                 Console.WriteLine("Elapsed={0}", sw.Elapsed);
